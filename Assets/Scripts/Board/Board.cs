@@ -171,6 +171,7 @@ public class Board
 
                 cell.Assign(item);
                 cell.ApplyItemPosition(true);
+                // 
             }
         }
     }
