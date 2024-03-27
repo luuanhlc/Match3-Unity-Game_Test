@@ -1,0 +1,67 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class UIPanelMain : MonoBehaviour, IMenu
+{
+    [SerializeField] private Button btnTimer;
+
+    [SerializeField] private Button btnMoves;
+
+    [SerializeField] private Button btnRestart;
+
+    private UIMainManager m_mngr;
+
+    private GameManager gameManager;
+    private void Awake()
+    {
+        btnMoves.onClick.AddListener(OnClickMoves);
+        btnTimer.onClick.AddListener(OnClickTimer);
+        btnRestart.onClick.AddListener(OnClickRestart);
+
+        btnRestart.interactable = false;
+    }
+
+    private void OnDestroy()
+    {
+        if (btnMoves) btnMoves.onClick.RemoveAllListeners();
+        if (btnTimer) btnTimer.onClick.RemoveAllListeners();
+        if(btnRestart) btnRestart.onClick.RemoveAllListeners();
+    }
+
+    public void Setup(UIMainManager mngr)
+    {
+        m_mngr = mngr;
+
+        
+    }
+
+    private void OnClickTimer()
+    {
+        m_mngr.LoadLevelTimer();
+    }
+
+    private void OnClickMoves()
+    {
+        m_mngr.LoadLevelMoves();
+    }
+
+    private void OnClickRestart()
+    {
+        m_mngr.RestartLevel();
+    }
+
+    public void Show()
+    {
+        this.gameObject.SetActive(true);
+        if (m_mngr.IsCan_Restart)
+            btnRestart.interactable = true;
+    }
+
+    public void Hide()
+    {
+        this.gameObject.SetActive(false);
+    }
+}
