@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +11,8 @@ public class UIMainManager : MonoBehaviour
     private IMenu[] m_menuList;
 
     private GameManager m_gameManager;
+
+    [HideInInspector] public bool IsCan_Restart = false;
 
     private void Awake()
     {
@@ -26,7 +29,6 @@ public class UIMainManager : MonoBehaviour
 
     internal void ShowMainMenu()
     {
-        m_gameManager.ClearLevel();
         m_gameManager.SetState(GameManager.eStateGame.MAIN_MENU);
     }
 
@@ -67,6 +69,7 @@ public class UIMainManager : MonoBehaviour
                 ShowMenu<UIPanelPause>();
                 break;
             case GameManager.eStateGame.GAME_OVER:
+                IsCan_Restart = true;
                 ShowMenu<UIPanelGameOver>();
                 break;
         }
@@ -88,7 +91,7 @@ public class UIMainManager : MonoBehaviour
         }
     }
 
-    internal Text GetLevelConditionView()
+    internal TextMeshProUGUI GetLevelConditionView()
     {
         UIPanelGame game = m_menuList.Where(x => x is UIPanelGame).Cast<UIPanelGame>().FirstOrDefault();
         if (game)
@@ -104,13 +107,20 @@ public class UIMainManager : MonoBehaviour
         m_gameManager.SetState(GameManager.eStateGame.PAUSE);
     }
 
+    internal void RestartLevel()
+    {
+        m_gameManager.LoadLevel(GameManager.eLevelMode.MOVES, true);
+    }
+
     internal void LoadLevelMoves()
     {
+        m_gameManager.ClearLevel();
         m_gameManager.LoadLevel(GameManager.eLevelMode.MOVES);
     }
 
     internal void LoadLevelTimer()
     {
+        m_gameManager.ClearLevel();
         m_gameManager.LoadLevel(GameManager.eLevelMode.TIMER);
     }
 

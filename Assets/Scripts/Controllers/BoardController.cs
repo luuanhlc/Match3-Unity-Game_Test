@@ -31,8 +31,10 @@ public class BoardController : MonoBehaviour
 
     private bool m_gameOver;
 
-    public void StartGame(GameManager gameManager, GameSettings gameSettings)
+    public void StartGame(GameManager gameManager, GameSettings gameSettings, bool restart = false)
     {
+        m_gameOver = false;
+
         m_gameManager = gameManager;
 
         m_gameSettings = gameSettings;
@@ -41,9 +43,11 @@ public class BoardController : MonoBehaviour
 
         m_cam = Camera.main;
 
-        m_board = new Board(this.transform, gameSettings);
-
-        Fill();
+        if (!restart)
+        {
+            m_board = new Board(this.transform, gameSettings);
+            Fill();
+        }
     }
 
     private void Fill()
@@ -219,8 +223,12 @@ public class BoardController : MonoBehaviour
 
     private void CollapseMatches(List<Cell> matches, Cell cellEnd)
     {
+        
         for (int i = 0; i < matches.Count; i++)
         {
+            NormalItem it = matches[i].Item as NormalItem;
+            m_board.Appear[(int)it.ItemType]--;
+
             matches[i].ExplodeItem();
         }
 
@@ -228,7 +236,7 @@ public class BoardController : MonoBehaviour
         {
             m_board.ConvertNormalToBonus(matches, cellEnd);
         }
-
+        
         StartCoroutine(ShiftDownItemsCoroutine());
     }
 

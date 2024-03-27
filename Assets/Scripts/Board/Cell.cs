@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Cell : MonoBehaviour
@@ -52,6 +53,34 @@ public class Cell : MonoBehaviour
         {
             Item.ShowAppearAnimation();
         }
+    }
+
+    public List<NormalItem.eNormalType> GetTypesExcept()
+    {
+        List<NormalItem.eNormalType> types = new List<NormalItem.eNormalType>();
+        
+        if(NeighbourLeft != null && NeighbourLeft.Item != null)
+        {
+            NormalItem it = NeighbourLeft.Item as NormalItem;
+            types.Remove(it.ItemType);
+        }
+        if (NeighbourRight != null && NeighbourRight.Item != null)
+        {
+            NormalItem it = NeighbourRight.Item as NormalItem;
+            types.Add(it.ItemType);
+        }
+        if (NeighbourUp != null && NeighbourUp.Item != null)
+        {
+            NormalItem it = NeighbourUp.Item as NormalItem;
+            types.Add(it.ItemType);
+        }
+        if (NeighbourBottom != null && NeighbourBottom.Item != null)
+        {
+            NormalItem it = NeighbourBottom.Item as NormalItem;
+            types.Add(it.ItemType);
+        }
+
+        return types;
     }
 
     internal void Clear()

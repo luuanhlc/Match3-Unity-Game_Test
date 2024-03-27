@@ -45,6 +45,8 @@ public class GameManager : MonoBehaviour
 
     private LevelCondition m_levelCondition;
 
+    private eLevelMode pre_Level;
+
     private void Awake()
     {
         State = eStateGame.SETUP;
@@ -81,11 +83,17 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void LoadLevel(eLevelMode mode)
+    public void LoadLevel(eLevelMode mode, bool restart = false)
     {
-        m_boardController = new GameObject("BoardController").AddComponent<BoardController>();
-        m_boardController.StartGame(this, m_gameSettings);
+        if (!restart)
+        {
+            m_boardController = new GameObject("BoardController").AddComponent<BoardController>();
+        }
+        else
+            mode = pre_Level;
 
+        m_boardController.StartGame(this, m_gameSettings, restart);
+        pre_Level = mode;
         if (mode == eLevelMode.MOVES)
         {
             m_levelCondition = this.gameObject.AddComponent<LevelMoves>();

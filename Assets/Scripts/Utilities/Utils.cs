@@ -24,4 +24,25 @@ public class Utils
 
         return result;
     }
+
+    public static NormalItem.eNormalType GetRandomNormalTypeExceptPrioritizeLeast(NormalItem.eNormalType[] types, List<int> appear)
+    {
+        Dictionary<NormalItem.eNormalType, int> itemAppear = new();
+
+        List<NormalItem.eNormalType> list = Enum.GetValues(typeof(NormalItem.eNormalType)).Cast<NormalItem.eNormalType>().Except(types).ToList();
+
+        foreach (var type in list)
+        {
+            itemAppear.Add(type, 0);
+        }
+
+        for(int i = 0; i < appear.Count; i++)
+        {
+            if (!itemAppear.ContainsKey((NormalItem.eNormalType)i)) continue;
+
+            itemAppear[((NormalItem.eNormalType)i)] = appear[i];
+        }
+
+        return itemAppear.OrderBy(kvp => kvp.Value).First().Key;
+    }
 }

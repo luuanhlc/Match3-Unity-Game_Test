@@ -37,6 +37,11 @@ public class Board
         m_cells = new Cell[boardSizeX, boardSizeY];
 
         CreateBoard();
+
+        int normalTypeCount = Enum.GetValues(typeof(NormalItem.eNormalType)).Length;
+
+        for(int i = 0; i < normalTypeCount; i++)
+            Appear.Add(0);
     }
 
     private void CreateBoard()
@@ -69,7 +74,6 @@ public class Board
                 if (x > 0) m_cells[x, y].NeighbourLeft = m_cells[x - 1, y];
             }
         }
-
     }
 
     internal void Fill()
@@ -100,7 +104,10 @@ public class Board
                     }
                 }
 
-                item.SetType(Utils.GetRandomNormalTypeExcept(types.ToArray()));
+                var type = Utils.GetRandomNormalTypeExcept(types.ToArray());
+                Appear[(int)type]++;
+
+                item.SetType(type);
                 item.SetView();
                 item.SetViewRoot(m_root);
 
@@ -135,7 +142,9 @@ public class Board
         }
     }
 
+    public List<int> Appear = new List<int>();
 
+    int preType;
     internal void FillGapsWithNewItems()
     {
         for (int x = 0; x < boardSizeX; x++)
@@ -147,7 +156,16 @@ public class Board
 
                 NormalItem item = new NormalItem();
 
-                item.SetType(Utils.GetRandomNormalType());
+                var typesExecpt = cell.GetTypesExcept();
+                typesExecpt.Add((NormalItem.eNormalType)preType);
+                
+                var type = Utils.GetRandomNormalTypeExceptPrioritizeLeast(typesExecpt.ToArray(), Appear);
+                preType = (int)type;
+                
+                Appear[(int)type]++;
+
+                item.SetType(type);
+                
                 item.SetView();
                 item.SetViewRoot(m_root);
 
